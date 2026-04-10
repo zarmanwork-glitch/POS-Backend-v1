@@ -6,7 +6,7 @@ COPY package.json bun.lock* ./
 RUN bun install
 
 COPY . .
-RUN bun run build && ls dist/main.js
+RUN node_modules/.bin/nest build --verbose 2>&1 && ls -la dist/ && ls dist/main.js
 
 # ---------- production stage ----------
 FROM node:20-alpine
