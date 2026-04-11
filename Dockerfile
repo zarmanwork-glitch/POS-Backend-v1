@@ -6,7 +6,7 @@ COPY package.json bun.lock* ./
 RUN bun install
 
 COPY . .
-RUN node_modules/.bin/tsc -p tsconfig.build.json; echo "tsc exit: $?"; ls -la dist/ 2>/dev/null || echo "DIST IS EMPTY"
+RUN node_modules/.bin/tsc -p tsconfig.build.json && ls dist/src/main.js
 
 # ---------- production stage ----------
 FROM node:20-alpine
@@ -17,4 +17,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
 
 EXPOSE 5001
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
