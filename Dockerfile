@@ -1,12 +1,12 @@
 # ---------- build stage ----------
-FROM oven/bun:1 AS builder
+FROM node:20 AS builder
 WORKDIR /app
 
-COPY package.json bun.lock* ./
-RUN bun install
+COPY package.json ./
+RUN npm install
 
 COPY . .
-RUN node_modules/.bin/tsc -p tsconfig.build.json && ls dist/src/main.js
+RUN npx nest build --webpack && ls dist/main.js
 
 # ---------- production stage ----------
 FROM node:20-alpine
@@ -17,4 +17,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
 
 EXPOSE 5001
-CMD ["node", "dist/src/main"]
+CMD ["node", "dist/main"]
